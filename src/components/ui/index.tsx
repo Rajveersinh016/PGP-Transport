@@ -105,20 +105,20 @@ export function KpiCard({ label, value, icon, color = 'text-[#F4511E]', bgColor 
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left rounded-2xl border bg-white p-4 transition-all duration-150 relative overflow-hidden group
+      className={`w-full text-left rounded-2xl border bg-white p-3 sm:p-4 transition-all duration-150 relative overflow-hidden group
         ${highlight
           ? 'border-[#F4511E] shadow-[0_2px_8px_rgba(244,81,30,0.12)] ring-1 ring-[#F4511E]/30'
           : 'border-[#E8E5E0] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:border-[#F4511E]/40 hover:shadow-md'}
         ${onClick ? 'cursor-pointer' : 'cursor-default'}`}
     >
       {highlight && <div className="absolute top-0 left-0 right-0 h-1 bg-[#F4511E]" />}
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex items-start justify-between gap-1.5 sm:gap-2">
         <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-semibold text-[#8E9CA8] uppercase tracking-wider truncate">{label}</p>
-          <p className="mt-1.5 text-2xl lg:text-3xl font-bold text-[#101820] tracking-tight">{value}</p>
-          {sub && <p className="text-[11px] text-[#8E9CA8] mt-1 truncate">{sub}</p>}
+          <p className="text-[10px] sm:text-[11px] font-semibold text-[#8E9CA8] uppercase tracking-wider truncate">{label}</p>
+          <p className="mt-1 sm:mt-1.5 text-xl sm:text-2xl lg:text-3xl font-bold text-[#101820] tracking-tight">{value}</p>
+          {sub && <p className="text-[10px] sm:text-[11px] text-[#8E9CA8] mt-0.5 sm:mt-1 truncate">{sub}</p>}
         </div>
-        <div className={`flex-shrink-0 rounded-xl p-2.5 transition-transform duration-150 group-hover:scale-105 ${bgColor}`}>
+        <div className={`flex-shrink-0 rounded-xl p-2 sm:p-2.5 transition-transform duration-150 group-hover:scale-105 ${bgColor}`}>
           <span className={`${color}`}>{icon}</span>
         </div>
       </div>
@@ -139,10 +139,10 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, subtitle, action, breadcrumb }: PageHeaderProps) {
   return (
-    <div className="mb-6">
+    <div className="mb-4 sm:mb-6">
       {breadcrumb && breadcrumb.length > 0 && (
         <nav aria-label="Breadcrumb" className="mb-1.5">
-          <p className="text-xs font-medium text-[#8E9CA8] flex items-center gap-1.5">
+          <p className="text-xs font-medium text-[#8E9CA8] flex items-center gap-1.5 flex-wrap">
             {breadcrumb.map((crumb, idx) => (
               <React.Fragment key={crumb}>
                 <span>{crumb}</span>
@@ -152,12 +152,12 @@ export function PageHeader({ title, subtitle, action, breadcrumb }: PageHeaderPr
           </p>
         </nav>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-[#101820] tracking-tight">{title}</h1>
-          {subtitle && <p className="text-sm text-[#555E68] mt-1">{subtitle}</p>}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#101820] tracking-tight truncate">{title}</h1>
+          {subtitle && <p className="text-xs sm:text-sm text-[#555E68] mt-1">{subtitle}</p>}
         </div>
-        {action && <div className="flex-shrink-0 flex items-center gap-2">{action}</div>}
+        {action && <div className="flex-shrink-0 flex items-center gap-2 flex-wrap">{action}</div>}
       </div>
     </div>
   );
@@ -180,17 +180,17 @@ export function Modal({ open, onClose, title, children, size = 'md', footer }: M
   if (!open) return null;
   const widths = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' };
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label={title}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4" role="dialog" aria-modal="true" aria-label={title}>
       <div className="absolute inset-0 bg-[#101820]/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
-      <div className={`relative w-full ${widths[size]} bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden`}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#F0EDE8]">
-          <h2 className="text-base font-bold text-[#101820]">{title}</h2>
-          <button onClick={onClose} className="text-[#8E9CA8] hover:text-[#101820] hover:bg-[#F6F5F2] transition-colors p-1.5 rounded-lg" aria-label="Close modal">
+      <div className={`relative w-full ${widths[size]} bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl flex flex-col max-h-[92vh] overflow-hidden`}>
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-[#F0EDE8] flex-shrink-0">
+          <h2 className="text-sm sm:text-base font-bold text-[#101820] truncate pr-2">{title}</h2>
+          <button onClick={onClose} className="text-[#8E9CA8] hover:text-[#101820] hover:bg-[#F6F5F2] transition-colors p-1.5 rounded-lg flex-shrink-0" aria-label="Close modal">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
-        {footer && <div className="px-6 py-4 border-t border-[#F0EDE8] bg-[#F6F5F2] rounded-b-2xl">{footer}</div>}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-5">{children}</div>
+        {footer && <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-[#F0EDE8] bg-[#F6F5F2] rounded-b-2xl flex-shrink-0">{footer}</div>}
       </div>
     </div>
   );
@@ -215,12 +215,13 @@ export function ConfirmDialog({ open, onClose, onConfirm, title, message, confir
   return (
     <Modal open={open} onClose={onClose} title={title} size="sm"
       footer={
-        <div className="flex gap-3 justify-end">
-          <Button variant="secondary" onClick={onClose}>Cancel</Button>
+        <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 sm:justify-end w-full">
+          <Button variant="secondary" onClick={onClose} className="w-full sm:w-auto justify-center">Cancel</Button>
           <Button
             variant={confirmVariant === 'danger' ? 'danger' : 'primary'}
             onClick={() => { onConfirm(); onClose(); }}
             disabled={loading}
+            className="w-full sm:w-auto justify-center"
           >
             {loading ? 'Processing...' : confirmLabel}
           </Button>
@@ -257,12 +258,12 @@ export function ToastContainer({ toasts, onRemove }: ToastProps) {
     info: 'ℹ',
   };
   return (
-    <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full">
+    <div className="fixed top-3 sm:top-4 right-3 sm:right-4 left-3 sm:left-auto sm:max-w-sm z-[100] flex flex-col gap-2 pointer-events-none">
       {toasts.map(t => (
-        <div key={t.id} className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl ${styles[t.type]} animate-in transition-all`}>
+        <div key={t.id} className={`pointer-events-auto flex items-center gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl shadow-xl ${styles[t.type]} animate-in transition-all text-xs sm:text-sm`}>
           <span className="text-sm font-bold flex-shrink-0">{icons[t.type]}</span>
-          <span className="text-sm flex-1 font-medium">{t.message}</span>
-          <button onClick={() => onRemove(t.id)} className="text-white/70 hover:text-white text-xs p-1">✕</button>
+          <span className="flex-1 font-medium break-words">{t.message}</span>
+          <button onClick={() => onRemove(t.id)} className="text-white/70 hover:text-white p-1 flex-shrink-0" aria-label="Close notification">✕</button>
         </div>
       ))}
     </div>
@@ -341,7 +342,7 @@ export function SelectFilter({ value, onChange, options, label, className = '' }
       value={value}
       onChange={e => onChange(e.target.value)}
       aria-label={label}
-      className={`text-sm border border-[#E8E5E0] rounded-[10px] px-3 py-2 bg-white text-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F4511E]/30 focus:border-[#F4511E] transition-all ${className}`}
+      className={`text-xs sm:text-sm border border-[#E8E5E0] rounded-[10px] px-2.5 sm:px-3 py-2 bg-white text-[#101820] max-w-full focus:outline-none focus:ring-2 focus:ring-[#F4511E]/30 focus:border-[#F4511E] transition-all ${className}`}
     >
       {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
@@ -354,7 +355,7 @@ export function SelectFilter({ value, onChange, options, label, className = '' }
 // ============================================================
 export function Table({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`overflow-x-auto rounded-2xl border border-[#E8E5E0] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${className}`}>
+    <div className={`overflow-x-auto max-w-full touch-pan-x rounded-2xl border border-[#E8E5E0] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.03)] ${className}`}>
       <table className="w-full text-sm border-collapse">{children}</table>
     </div>
   );
@@ -362,7 +363,7 @@ export function Table({ children, className = '' }: { children: React.ReactNode;
 
 export function Th({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <th className={`px-4 py-3.5 text-left text-[11px] font-bold text-[#555E68] uppercase tracking-wider bg-[#F6F5F2] border-b border-[#E8E5E0] whitespace-nowrap ${className}`}>
+    <th className={`px-3 sm:px-4 py-2.5 sm:py-3.5 text-left text-[10px] sm:text-[11px] font-bold text-[#555E68] uppercase tracking-wider bg-[#F6F5F2] border-b border-[#E8E5E0] whitespace-nowrap ${className}`}>
       {children}
     </th>
   );
@@ -370,7 +371,7 @@ export function Th({ children, className = '' }: { children: React.ReactNode; cl
 
 export function Td({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <td className={`px-4 py-3.5 text-sm text-[#101820] border-b border-[#F0EDE8] transition-colors ${className}`}>
+    <td className={`px-3 sm:px-4 py-2.5 sm:py-3.5 text-xs sm:text-sm text-[#101820] border-b border-[#F0EDE8] transition-colors ${className}`}>
       {children}
     </td>
   );

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Truck, ArrowRight, Clock, AlertTriangle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { PageHeader, StatusBadge, SearchBar, SelectFilter, Table, Th, Td, EmptyState, Card } from '../components/ui';
 import { TripActionPanel } from '../components/trip/TripActionPanel';
 import { useToast } from '../hooks/useToast';
 import { ToastContainer } from '../components/ui';
-import type { TripStatus, MaterialType } from '../types';
 
 const STATUS_OPTIONS = [
   { label: 'All Status', value: '' },
@@ -39,7 +37,6 @@ const PRIORITY_OPTIONS = [
 
 export function ActiveTransit() {
   const { state } = useApp();
-  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [plantFilter, setPlantFilter] = useState('');

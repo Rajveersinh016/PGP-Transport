@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, User, Activity } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { PageHeader, SearchBar, SelectFilter, Table, Th, Td, EmptyState, Card } from '../components/ui';
 
@@ -297,10 +297,10 @@ export function MasterData() {
       </p>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 w-fit">
+      <div className="flex gap-1 mb-5 bg-gray-100 rounded-lg p-1 overflow-x-auto max-w-full touch-pan-x">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${activeTab === t.key ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}>
+            className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap flex-shrink-0 ${activeTab === t.key ? 'bg-white text-blue-700 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}>
             {t.label}
           </button>
         ))}

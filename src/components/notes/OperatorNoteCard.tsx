@@ -94,7 +94,7 @@ export function OperatorNoteCard({ note, currentUser, currentRole, onDelete, com
       {/* Note text — handwriting font */}
       <div
         className={`
-          text-[#2D2416] leading-relaxed mb-3
+          text-[#2D2416] leading-relaxed mb-3 break-words overflow-hidden
           ${compact ? 'text-sm' : 'text-base'}
         `}
         style={{ fontFamily: "'Caveat', 'Patrick Hand', cursive" }}
@@ -103,14 +103,14 @@ export function OperatorNoteCard({ note, currentUser, currentRole, onDelete, com
       </div>
 
       {/* Footer — normal font */}
-      <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#E8E4D0]/60">
-        <div className="flex items-center gap-2">
-          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${authorColor.bg} ${authorColor.text}`}>
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[#E8E4D0]/60">
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold flex-shrink-0 ${authorColor.bg} ${authorColor.text}`}>
             {note.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
           </div>
-          <div>
+          <div className="flex items-center flex-wrap gap-1">
             <span className="text-xs font-bold text-[#101820]">— {note.author}</span>
-            <span className={`ml-1.5 text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${authorColor.bg} ${authorColor.text} ${authorColor.border}`}>
+            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full border ${authorColor.bg} ${authorColor.text} ${authorColor.border}`}>
               {roleLabels[note.authorRole]}
             </span>
           </div>

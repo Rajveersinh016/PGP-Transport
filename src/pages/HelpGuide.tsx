@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import {
   BookOpen, HelpCircle, Compass, LayoutDashboard, FileText, CheckSquare,
   Factory, Warehouse, AlertTriangle, ShieldCheck, BarChart3, ChevronRight,
-  Info, Check, Sparkles, Navigation
+  Sparkles, Navigation, Info
 } from 'lucide-react';
-import { PageHeader, Card, StatusBadge, Button } from '../components/ui';
+import { PageHeader, Card } from '../components/ui';
 
 type HelpSection =
   | 'poster'
@@ -65,26 +65,47 @@ export function HelpGuide() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Navigation Sidebar */}
-        <div className="space-y-1.5 lg:col-span-1">
-          <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#8E9CA8]">
-            User Manual Chapters
+        {/* Navigation Sidebar (Desktop) / Horizontal Tab Strip (Mobile & Tablet) */}
+        <div className="lg:col-span-1">
+          {/* Mobile/Tablet Horizontal Ribbon */}
+          <div className="lg:hidden flex gap-1.5 p-1.5 bg-[#F6F5F2] border border-[#E8E5E0] rounded-2xl overflow-x-auto max-w-full touch-pan-x mb-4">
+            {navItems.map(item => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${
+                  activeTab === item.id
+                    ? 'bg-[#F4511E] text-white shadow-sm'
+                    : 'bg-white hover:bg-[#F6F5F2] text-[#555E68] hover:text-[#101820] border border-[#E8E5E0]'
+                }`}
+              >
+                <span className={activeTab === item.id ? 'text-white' : 'text-[#8E9CA8]'}>{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            ))}
           </div>
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left ${
-                activeTab === item.id
-                  ? 'bg-[#F4511E] text-white shadow-sm'
-                  : 'bg-white hover:bg-[#F6F5F2] text-[#101820] border border-[#E8E5E0]'
-              }`}
-            >
-              <span className={activeTab === item.id ? 'text-white' : 'text-[#8E9CA8]'}>{item.icon}</span>
-              <span className="truncate flex-1">{item.label}</span>
-              {activeTab === item.id && <ChevronRight size={14} className="text-white" />}
-            </button>
-          ))}
+
+          {/* Desktop Vertical Sidebar */}
+          <div className="hidden lg:block space-y-1.5">
+            <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-[#8E9CA8]">
+              User Manual Chapters
+            </div>
+            {navItems.map(item => (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all text-left ${
+                  activeTab === item.id
+                    ? 'bg-[#F4511E] text-white shadow-sm'
+                    : 'bg-white hover:bg-[#F6F5F2] text-[#101820] border border-[#E8E5E0]'
+                }`}
+              >
+                <span className={activeTab === item.id ? 'text-white' : 'text-[#8E9CA8]'}>{item.icon}</span>
+                <span className="truncate flex-1">{item.label}</span>
+                {activeTab === item.id && <ChevronRight size={14} className="text-white" />}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Content Pane */}

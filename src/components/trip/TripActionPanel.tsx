@@ -3,7 +3,7 @@ import { X, ChevronRight, AlertTriangle, CheckCircle2, ArrowRight, PenLine, Lock
 import { useApp } from '../../context/AppContext';
 import { StatusBadge, Button, ConfirmDialog, LabelValue, TimelineStep } from '../ui';
 import type { Trip, Vehicle, Warehouse, Plant, TripStatus } from '../../types';
-import { hasPermission, tripActionPermission, roleLabels } from '../../auth/permissions';
+import { hasPermission, tripActionPermission } from '../../auth/permissions';
 import { OperatorNoteCard } from '../notes/OperatorNoteCard';
 import { AddNoteModal } from '../notes/AddNoteModal';
 
@@ -398,7 +398,7 @@ export function TripActionPanel({ trip, vehicle, onClose, onAction, warehouses, 
   return (
     <div className={`bg-white rounded-2xl border border-[#E8E5E0] shadow-[0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden ${embedded ? '' : 'sticky top-20'}`}>
       {/* Header */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-[#F0EDE8] bg-[#F6F5F2]">
+      <div className="flex items-center gap-3 px-4 sm:px-5 py-3 sm:py-4 border-b border-[#F0EDE8] bg-[#F6F5F2]">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-bold text-[#101820] font-mono text-sm">{trip.vehicleNumber}</span>
@@ -418,9 +418,9 @@ export function TripActionPanel({ trip, vehicle, onClose, onAction, warehouses, 
         )}
       </div>
 
-      <div className="p-5 space-y-5">
+      <div className="p-3.5 sm:p-5 space-y-4 sm:space-y-5">
         {/* Route Info */}
-        <div className="p-4 bg-white rounded-xl border border-[#E8E5E0]">
+        <div className="p-3.5 sm:p-4 bg-white rounded-xl border border-[#E8E5E0]">
           <div className="flex items-center gap-2 text-sm text-[#101820] flex-wrap">
             <span className="font-bold">{trip.sourcePlantName.replace('Plant ', '')}</span>
             <ArrowRight size={14} className="text-[#8E9CA8]" />
@@ -544,7 +544,7 @@ export function TripActionPanel({ trip, vehicle, onClose, onAction, warehouses, 
                 <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Enforced</span>
               </div>
               <p className="text-[11px] text-[#8E9CA8] mb-2 leading-relaxed">System blocks out-of-order execution per logistics compliance rules:</p>
-              <div className="grid grid-cols-2 gap-1.5 text-[11px]">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-[11px]">
                 {trip.status !== 'LOADED' && (
                   <button
                     onClick={() => onAction?.('Blocked: Gate Out is unavailable because loading has not been completed.')}
@@ -588,13 +588,13 @@ export function TripActionPanel({ trip, vehicle, onClose, onAction, warehouses, 
 
       {/* Confirmation Modal */}
       {confirmAction && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="absolute inset-0 bg-[#101820]/60 backdrop-blur-sm" onClick={() => setConfirmAction(null)} />
-          <div className="relative w-full max-w-md bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-[#F0EDE8] bg-[#F6F5F2]">
+          <div className="relative w-full max-w-md bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#F0EDE8] bg-[#F6F5F2] flex-shrink-0">
               <h2 className="text-base font-bold text-[#101820]">{confirmAction.confirmTitle}</h2>
             </div>
-            <div className="px-6 py-5 space-y-4">
+            <div className="px-4 sm:px-6 py-4 sm:py-5 space-y-4 overflow-y-auto flex-1">
               {confirmAction.confirmMsg}
               <div>
                 <label className="text-xs text-[#555E68] font-bold block mb-1.5">Operational Remark / Note (Optional)</label>
@@ -607,9 +607,9 @@ export function TripActionPanel({ trip, vehicle, onClose, onAction, warehouses, 
                 />
               </div>
             </div>
-            <div className="px-6 py-4 border-t border-[#F0EDE8] bg-[#F6F5F2] flex gap-3 justify-end">
-              <Button variant="secondary" onClick={() => setConfirmAction(null)}>Cancel</Button>
-              <Button variant="primary" onClick={handleConfirm}>
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-[#F0EDE8] bg-[#F6F5F2] flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 sm:justify-end flex-shrink-0">
+              <Button variant="secondary" onClick={() => setConfirmAction(null)} className="w-full sm:w-auto justify-center">Cancel</Button>
+              <Button variant="primary" onClick={handleConfirm} className="w-full sm:w-auto justify-center">
                 {confirmAction.label}
               </Button>
             </div>

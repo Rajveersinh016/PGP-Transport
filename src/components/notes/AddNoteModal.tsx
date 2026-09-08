@@ -45,14 +45,14 @@ export function AddNoteModal({ isOpen, onClose, onAdd, currentRole, entityType =
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-3 sm:p-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-[#101820]/60 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md border border-[#E8E5E0] overflow-hidden">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md border border-[#E8E5E0] overflow-hidden max-h-[92vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#F0EDE8] bg-[#FFFEF7]">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#F0EDE8] bg-[#FFFEF7] flex-shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center">
               <PenLine size={16} className="text-amber-600" />
@@ -68,7 +68,7 @@ export function AddNoteModal({ isOpen, onClose, onAdd, currentRole, entityType =
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-4">
+        <div className="p-4 sm:p-6 space-y-4 overflow-y-auto flex-1">
           {!canAdd && (
             <div className="flex items-center gap-3 p-3 bg-rose-50 border border-rose-200 rounded-xl">
               <Lock size={16} className="text-rose-500 flex-shrink-0" />
@@ -81,7 +81,7 @@ export function AddNoteModal({ isOpen, onClose, onAdd, currentRole, entityType =
           {/* Category */}
           <div>
             <label className="block text-xs font-bold text-[#101820] mb-2 uppercase tracking-wider">Category</label>
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
               {CATEGORIES.map(cat => (
                 <button
                   key={cat.value}
@@ -109,7 +109,7 @@ export function AddNoteModal({ isOpen, onClose, onAdd, currentRole, entityType =
               disabled={!canAdd}
               placeholder="Write your operational remark..."
               rows={4}
-              className="w-full px-4 py-3 text-base border border-[#E8E5E0] rounded-xl text-[#101820] placeholder-[#8E9CA8] focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-all resize-none disabled:opacity-50 disabled:bg-[#F6F5F2]"
+              className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 text-base border border-[#E8E5E0] rounded-xl text-[#101820] placeholder-[#8E9CA8] focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-all resize-none disabled:opacity-50 disabled:bg-[#F6F5F2]"
               style={{ fontFamily: "'Caveat', cursive" }}
             />
           </div>
@@ -123,23 +123,23 @@ export function AddNoteModal({ isOpen, onClose, onAdd, currentRole, entityType =
               onChange={e => setLocation(e.target.value)}
               disabled={!canAdd}
               placeholder="e.g. Plant-01 Loading Bay"
-              className="w-full px-4 py-2.5 text-sm border border-[#E8E5E0] rounded-xl text-[#101820] placeholder-[#8E9CA8] focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-all disabled:opacity-50 disabled:bg-[#F6F5F2]"
+              className="w-full px-3.5 sm:px-4 py-2 sm:py-2.5 text-sm border border-[#E8E5E0] rounded-xl text-[#101820] placeholder-[#8E9CA8] focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-300 transition-all disabled:opacity-50 disabled:bg-[#F6F5F2]"
             />
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-[#F0EDE8] flex gap-3 bg-[#F6F5F2]">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-[#F0EDE8] flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 bg-[#F6F5F2] flex-shrink-0">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-2.5 border border-[#E8E5E0] rounded-xl text-sm font-semibold text-[#101820] hover:bg-white transition-colors"
+            className="w-full sm:flex-1 px-4 py-2.5 border border-[#E8E5E0] rounded-xl text-sm font-semibold text-[#101820] hover:bg-white transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!text.trim() || !canAdd}
-            className="flex-1 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
+            className="w-full sm:flex-1 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold transition-colors flex items-center justify-center gap-2"
           >
             <PenLine size={15} />
             Save Note

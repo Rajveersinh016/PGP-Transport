@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard, Truck, Package, MapPin, Users, BarChart2, Settings, ChevronLeft,
+  LayoutDashboard, Truck, Package, Users, BarChart2, Settings, ChevronLeft,
   ChevronRight, AlertTriangle, ClipboardList, Navigation, Warehouse, Factory,
-  UserCheck, Building2, FileText, History, Shield, Database, Bell, Search,
-  Plus, ChevronDown, RefreshCw, Menu, X, TrendingUp, HelpCircle, LogIn,
+  UserCheck, Building2, FileText, History, Database, Bell, Search,
+  Plus, ChevronDown, RefreshCw, Menu, X, TrendingUp, HelpCircle,
   CheckCircle2, Info
 } from 'lucide-react';
 import { useApp, useUnreadNotifications } from '../../context/AppContext';
-import { StatusBadge } from '../ui';
 import type { UserRole } from '../../types';
 import { roleLabels, roleColors, roleAssignment } from '../../auth/permissions';
 import { hasPermission } from '../../auth/permissions';
@@ -204,14 +203,21 @@ function getRoleNav(role: UserRole): Array<{ section?: string; items: NavItem[] 
 // ============================================================
 // SINGLE NAV ITEM BUTTON
 // ============================================================
-function NavItemButton({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
+function NavItemButton({ item, collapsed, onItemClick }: { item: NavItem; collapsed: boolean; onItemClick?: () => void }) {
   const location = useLocation();
   const navigate = useNavigate();
   const isActive = item.path && location.pathname === item.path;
 
+  const handleClick = () => {
+    if (item.path) {
+      navigate(item.path);
+      onItemClick?.();
+    }
+  };
+
   return (
     <button
-      onClick={() => item.path && navigate(item.path)}
+      onClick={handleClick}
       title={collapsed ? item.label : undefined}
       id={`nav-${(item.label || '').replace(/\s+/g, '-').toLowerCase()}`}
       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-sm font-medium transition-all duration-150
@@ -228,10 +234,11 @@ function NavItemButton({ item, collapsed }: { item: NavItem; collapsed: boolean 
 // ============================================================
 // SIDEBAR
 // ============================================================
-function Sidebar({ collapsed, onToggle, onRoleChange }: {
+function Sidebar({ collapsed, onToggle, onRoleChange, onItemClick }: {
   collapsed: boolean;
   onToggle: () => void;
   onRoleChange: (role: UserRole, name: string) => void;
+  onItemClick?: () => void;
 }) {
   const { state, switchRole, resetDemo } = useApp();
   const [showRoleMenu, setShowRoleMenu] = useState(false);
@@ -245,6 +252,7 @@ function Sidebar({ collapsed, onToggle, onRoleChange }: {
     switchRole(role);
     setShowRoleMenu(false);
     onRoleChange(role, roleLabels[role]);
+    onItemClick?.();
   };
 
   return (
@@ -296,7 +304,7 @@ function Sidebar({ collapsed, onToggle, onRoleChange }: {
             )}
             <div className="space-y-0.5">
               {group.items.map(item => (
-                <NavItemButton key={item.label} item={item} collapsed={collapsed} />
+                <NavItemButton key={item.label} item={item} collapsed={collapsed} onItemClick={onItemClick} />
               ))}
             </div>
           </div>
@@ -378,9 +386,9 @@ function RoleContextBanner({ role }: { role: UserRole }) {
   const color = roleColors[role];
 
   return (
-    <div className={`${color.bg} ${color.border} border-b px-6 py-2 flex items-center gap-3`}>
-      <Info size={14} className={color.text} />
-      <span className={`text-xs font-semibold ${color.text}`}>
+    <div className={`${color.bg} ${color.border} border-b px-3 sm:px-6 py-2 flex items-center gap-2 sm:gap-3 flex-wrap text-xs`}>
+      <Info size={14} className={`${color.text} flex-shrink-0`} />
+      <span className={`text-xs font-semibold ${color.text} break-words`}>
         Logged in as: <strong>{roleLabels[role]}</strong>
         &nbsp;·&nbsp;
         {assignment.type}: <strong>{assignment.name}</strong>
@@ -402,9 +410,9 @@ function RoleChangeToast({ message, onDone }: { message: string; onDone: () => v
   }, [onDone]);
 
   return (
-    <div className="fixed bottom-6 right-6 z-[999] flex items-center gap-3 bg-[#101820] text-white px-5 py-3 rounded-2xl shadow-2xl border border-[#17232B] animate-[slide-up_0.3s_ease]">
+    <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 left-4 sm:left-auto z-[999] flex items-center gap-3 bg-[#101820] text-white px-4 sm:px-5 py-3 rounded-2xl shadow-2xl border border-[#17232B] animate-[slide-up_0.3s_ease]">
       <CheckCircle2 size={18} className="text-emerald-400 flex-shrink-0" />
-      <span className="text-sm font-semibold">{message}</span>
+      <span className="text-xs sm:text-sm font-semibold break-words">{message}</span>
     </div>
   );
 }
@@ -444,25 +452,29 @@ function Header({ onMobileMenu, searchQuery, onSearchChange }: {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-[#E8E5E0] h-16 flex items-center px-6 gap-4 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-      <button onClick={onMobileMenu} className="lg:hidden text-[#101820] hover:text-[#F4511E] p-1.5 rounded-lg hover:bg-[#F6F5F2]" aria-label="Open menu">
+    <header className="sticky top-0 z-30 bg-white border-b border-[#E8E5E0] h-16 flex items-center px-3 sm:px-6 gap-2 sm:gap-4 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+      <button
+        onClick={onMobileMenu}
+        className="lg:hidden text-[#101820] hover:text-[#F4511E] p-2 rounded-lg hover:bg-[#F6F5F2] min-w-[38px] min-h-[38px] flex items-center justify-center flex-shrink-0"
+        aria-label="Open menu"
+      >
         <Menu size={20} />
       </button>
 
       {/* Search */}
-      <div className="relative flex-1 max-w-md">
-        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E9CA8]" />
+      <div className="relative flex-1 min-w-0 max-w-md">
+        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8E9CA8]" />
         <input
           type="text"
           value={searchQuery}
           onChange={e => onSearchChange(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && searchQuery && handleSearchSubmit()}
-          placeholder="Search vehicles, trips, drivers..."
-          className="w-full pl-10 pr-4 py-2 text-sm bg-white border border-[#E8E5E0] rounded-[10px] placeholder-[#8E9CA8] text-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F4511E]/30 focus:border-[#F4511E] transition-all"
+          placeholder="Search..."
+          className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2 text-xs sm:text-sm bg-white border border-[#E8E5E0] rounded-[10px] placeholder-[#8E9CA8] text-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F4511E]/30 focus:border-[#F4511E] transition-all"
           aria-label="Global search"
         />
         {searchQuery.trim().length > 1 && (
-          <div className="absolute left-0 top-full mt-2 w-full bg-white border border-[#E8E5E0] rounded-2xl shadow-xl z-50 overflow-hidden text-xs">
+          <div className="absolute left-0 top-full mt-2 w-[calc(100vw-1.5rem)] max-w-md bg-white border border-[#E8E5E0] rounded-2xl shadow-xl z-50 overflow-hidden text-xs">
             <div className="px-4 py-2 bg-[#F6F5F2] border-b border-[#E8E5E0] flex justify-between">
               <span className="font-bold text-[10px] uppercase tracking-wider text-[#101820]">Results ({totalMatches})</span>
               <button onClick={() => onSearchChange('')} className="text-[#8E9CA8] hover:text-[#101820] font-bold">✕</button>
@@ -497,13 +509,13 @@ function Header({ onMobileMenu, searchQuery, onSearchChange }: {
       </div>
 
       {/* Date/time */}
-      <div className="hidden md:block text-xs text-right leading-tight ml-auto pr-2">
+      <div className="hidden md:block text-xs text-right leading-tight ml-auto pr-2 flex-shrink-0">
         <div className="font-semibold text-[#101820]">{currentDate}</div>
         <div className="text-[#8E9CA8] mt-0.5">{currentTime}</div>
       </div>
 
       {/* Notifications */}
-      <div className="relative">
+      <div className="relative flex-shrink-0">
         <button
           onClick={() => { setShowNotifs(n => !n); setShowProfile(false); }}
           className="relative p-2 text-[#101820] hover:text-[#F4511E] hover:bg-[#FFF0E9] rounded-[10px] transition-colors"
@@ -517,7 +529,7 @@ function Header({ onMobileMenu, searchQuery, onSearchChange }: {
           )}
         </button>
         {showNotifs && (
-          <div className="absolute right-0 top-full mt-2 w-80 bg-white border border-[#E8E5E0] rounded-2xl shadow-xl z-50 overflow-hidden">
+          <div className="absolute -right-12 sm:right-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-xs sm:w-80 bg-white border border-[#E8E5E0] rounded-2xl shadow-xl z-50 overflow-hidden">
             <div className="flex items-center justify-between px-4 py-3 border-b border-[#F0EDE8] bg-[#F6F5F2]">
               <span className="text-xs font-bold text-[#101820] uppercase tracking-wider">Notifications</span>
               <button onClick={() => { markAllRead(); setShowNotifs(false); }} className="text-xs text-[#F4511E] hover:underline font-semibold">Mark all read</button>
@@ -528,9 +540,9 @@ function Header({ onMobileMenu, searchQuery, onSearchChange }: {
                   onClick={() => { markAllRead(); setShowNotifs(false); if (n.link) navigate(n.link); }}>
                   <div className="flex items-start gap-2.5">
                     <span className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${n.type === 'SUCCESS' ? 'bg-emerald-500' : n.type === 'WARNING' ? 'bg-amber-500' : n.type === 'ERROR' ? 'bg-rose-500' : 'bg-[#F4511E]'}`} />
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <p className="text-xs font-bold text-[#101820]">{n.title}</p>
-                      <p className="text-xs text-[#555E68] mt-0.5">{n.body}</p>
+                      <p className="text-xs text-[#555E68] mt-0.5 break-words">{n.body}</p>
                       <p className="text-[10px] text-[#8E9CA8] mt-1">{new Date(n.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</p>
                     </div>
                   </div>
@@ -545,10 +557,10 @@ function Header({ onMobileMenu, searchQuery, onSearchChange }: {
       </div>
 
       {/* Profile */}
-      <div className="relative">
+      <div className="relative flex-shrink-0">
         <button
           onClick={() => { setShowProfile(p => !p); setShowNotifs(false); }}
-          className="flex items-center gap-2.5 p-1.5 rounded-[10px] hover:bg-[#F6F5F2] transition-colors"
+          className="flex items-center gap-2 p-1.5 rounded-[10px] hover:bg-[#F6F5F2] transition-colors"
           aria-label="User profile"
         >
           <div className={`w-8 h-8 rounded-[10px] flex items-center justify-center text-xs font-bold ${roleColors[currentRole].bg} ${roleColors[currentRole].text}`}>
@@ -561,9 +573,9 @@ function Header({ onMobileMenu, searchQuery, onSearchChange }: {
           <ChevronDown size={14} className="text-[#8E9CA8] hidden sm:block" />
         </button>
         {showProfile && (
-          <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-[#E8E5E0] rounded-2xl shadow-xl z-50 overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 w-48 sm:w-52 bg-white border border-[#E8E5E0] rounded-2xl shadow-xl z-50 overflow-hidden">
             <div className="px-4 py-3 border-b border-[#F0EDE8] bg-[#F6F5F2]">
-              <p className="text-xs font-bold text-[#101820]">{state.settings.currentUser}</p>
+              <p className="text-xs font-bold text-[#101820] truncate">{state.settings.currentUser}</p>
               <p className="text-[10px] text-[#8E9CA8] font-medium">{roleLabels[currentRole]}</p>
             </div>
             {canViewSettings && (
@@ -587,7 +599,7 @@ function Header({ onMobileMenu, searchQuery, onSearchChange }: {
         <button
           onClick={() => navigate('/requests?new=1')}
           id="btn-new-request"
-          className="flex items-center gap-2 px-3.5 py-2 bg-[#F4511E] hover:bg-[#D84315] text-white text-xs font-bold uppercase tracking-wider rounded-[10px] shadow-sm hover:shadow transition-all"
+          className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-2 bg-[#F4511E] hover:bg-[#D84315] text-white text-xs font-bold uppercase tracking-wider rounded-[10px] shadow-sm hover:shadow transition-all flex-shrink-0"
           aria-label="Create new transport request"
         >
           <Plus size={15} />
@@ -621,13 +633,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Mobile sidebar */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 flex">
-          <div className="absolute inset-0 bg-[#101820]/70 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-          <div className="relative z-50 w-64 h-full">
-            <Sidebar collapsed={false} onToggle={() => setMobileMenuOpen(false)} onRoleChange={handleRoleChange} />
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div className="fixed inset-0 bg-[#101820]/70 backdrop-blur-sm transition-opacity" onClick={() => setMobileMenuOpen(false)} />
+          <div className="relative z-50 w-72 max-w-[85vw] h-full shadow-2xl">
+            <Sidebar
+              collapsed={false}
+              onToggle={() => setMobileMenuOpen(false)}
+              onRoleChange={handleRoleChange}
+              onItemClick={() => setMobileMenuOpen(false)}
+            />
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="absolute top-3 right-3 text-[#8E9CA8] hover:text-white"
+              className="absolute top-3.5 right-3.5 text-[#8E9CA8] hover:text-white p-1.5 rounded-lg hover:bg-[#17232B] transition-colors"
               aria-label="Close menu"
             >
               <X size={20} />
@@ -647,8 +664,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Context banner for operational roles */}
         <RoleContextBanner role={state.settings.currentRole} />
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 bg-[#FFFDFC]">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-6 lg:p-8 bg-[#FFFDFC]">
+          <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
             {children}
           </div>
         </main>

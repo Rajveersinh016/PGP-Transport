@@ -205,22 +205,22 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
   const s = DEMO_STEPS[step];
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       <div className="absolute inset-0 bg-[#101820]/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-[#F0EDE8] flex items-center gap-3 bg-[#F6F5F2]">
+      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+        <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#F0EDE8] flex items-center gap-3 bg-[#F6F5F2] flex-shrink-0">
           <div className="w-8 h-8 rounded-[10px] bg-[#F4511E] text-white flex items-center justify-center text-sm font-bold shadow-sm">{step + 1}</div>
-          <div>
-            <h2 className="text-base font-bold text-[#101820]">Demo Scenario Walkthrough</h2>
-            <p className="text-[11px] text-[#8E9CA8] font-medium">Checkpoint-Based Operational Journey</p>
+          <div className="min-w-0 flex-1">
+            <h2 className="text-sm sm:text-base font-bold text-[#101820] truncate">Demo Scenario Walkthrough</h2>
+            <p className="text-[10px] sm:text-[11px] text-[#8E9CA8] font-medium truncate">Checkpoint-Based Operational Journey</p>
           </div>
-          <button onClick={onClose} className="ml-auto text-[#8E9CA8] hover:text-[#101820] p-1 rounded-lg">✕</button>
+          <button onClick={onClose} className="text-[#8E9CA8] hover:text-[#101820] p-1.5 rounded-lg flex-shrink-0" aria-label="Close demo">✕</button>
         </div>
-        <div className="px-6 py-6">
-          <h3 className="font-bold text-[#101820] text-base mb-2">{s.title}</h3>
-          <p className="text-sm text-[#555E68] leading-relaxed">{s.desc}</p>
+        <div className="px-4 sm:px-6 py-4 sm:py-6 overflow-y-auto flex-1">
+          <h3 className="font-bold text-[#101820] text-sm sm:text-base mb-2">{s.title}</h3>
+          <p className="text-xs sm:text-sm text-[#555E68] leading-relaxed">{s.desc}</p>
           {/* Operational route visual */}
-          <div className="mt-5 p-4 bg-[#FFF0E9]/50 rounded-xl border border-[#FFE1D4]">
+          <div className="mt-4 sm:mt-5 p-3.5 sm:p-4 bg-[#FFF0E9]/50 rounded-xl border border-[#FFE1D4]">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[10px] text-[#F4511E] font-bold uppercase tracking-wider">Operational Journey — Not GPS</span>
               <span className="text-[10px] text-[#8E9CA8] font-semibold">Checkpoint Flow</span>
@@ -235,7 +235,7 @@ function DemoModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
           </div>
         </div>
-        <div className="px-6 py-4 border-t border-[#F0EDE8] bg-[#F6F5F2] flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-[#F0EDE8] bg-[#F6F5F2] flex flex-wrap gap-2 items-center justify-between flex-shrink-0">
           <div className="text-xs font-bold text-[#8E9CA8]">{step + 1} of {DEMO_STEPS.length} Steps</div>
           <div className="flex gap-2">
             {step > 0 && <Button variant="secondary" size="sm" onClick={() => setStep(s => s - 1)}>Previous</Button>}
@@ -256,7 +256,6 @@ function PlannerDashboard() {
   const navigate = useNavigate();
   const { state } = useApp();
   const stats = useVehicleStats();
-  const activeTrips = useActiveTrips();
   const [selectedTripId, setSelectedTripId] = useState<string | null>(null);
   const [showDemo, setShowDemo] = useState(false);
   const { toasts, addToast, removeToast } = useToast();
@@ -269,21 +268,21 @@ function PlannerDashboard() {
   const pendingRequests = state.requests.filter(r => r.status === 'PENDING');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <ToastContainer toasts={toasts} onRemove={removeToast} />
       <DemoModal open={showDemo} onClose={() => setShowDemo(false)} />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-[#101820] tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-[#101820] tracking-tight">
             {currentRole === 'ADMIN' ? 'System Dashboard' : 'Planning Dashboard'}
           </h1>
-          <p className="text-sm text-[#555E68] mt-0.5">
+          <p className="text-xs sm:text-sm text-[#555E68] mt-0.5">
             {currentRole === 'ADMIN' ? 'Full system control — all operations visible' : 'Transport planning — requests, vehicles, active trips'}
           </p>
         </div>
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
           <Button variant="secondary" size="sm" onClick={() => setShowDemo(true)} icon={<Play size={13} className="text-[#F4511E]" />}>Demo Scenario</Button>
           {canCreateRequest && (
             <Button variant="primary" size="sm" onClick={() => navigate('/requests?new=1')} icon={<RefreshCw size={13} />}>New Request</Button>
@@ -292,7 +291,7 @@ function PlannerDashboard() {
       </div>
 
       {/* No-GPS notice */}
-      <div className="p-4 bg-[#FFF0E9] border border-[#FFE1D4] rounded-2xl flex items-center gap-3.5">
+      <div className="p-3.5 sm:p-4 bg-[#FFF0E9] border border-[#FFE1D4] rounded-2xl flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-3.5">
         <div className="w-9 h-9 rounded-xl bg-[#F4511E] text-white flex items-center justify-center flex-shrink-0">
           <Navigation size={18} />
         </div>
@@ -303,7 +302,7 @@ function PlannerDashboard() {
       </div>
 
       {/* KPI Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2.5 sm:gap-3.5">
         <KpiCard label="Total Vehicles" value={stats.total} icon={<Truck size={17} />} color="text-[#101820]" bgColor="bg-[#F6F5F2]" onClick={() => navigate('/vehicles')} />
         <KpiCard label="In Transit" value={stats.inTransit} icon={<Navigation size={17} />} color="text-[#F4511E]" bgColor="bg-[#FFF0E9]" highlight={true} onClick={() => navigate('/transit')} sub="Active on route" />
         <KpiCard label="At Plant" value={stats.atPlant} icon={<Factory size={17} />} color="text-blue-700" bgColor="bg-blue-50" onClick={() => navigate('/vehicles/at-plant')} />
@@ -318,14 +317,14 @@ function PlannerDashboard() {
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         <div className="xl:col-span-4">
           <Card padding={false}>
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[#F0EDE8]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#F0EDE8]">
               <div>
-                <h2 className="text-base font-bold text-[#101820]">Transit Control Board</h2>
+                <h2 className="text-sm sm:text-base font-bold text-[#101820]">Transit Control Board</h2>
                 <p className="text-xs text-[#8E9CA8] mt-0.5">Click any vehicle card to view details and execute actions</p>
               </div>
-              <button onClick={() => navigate('/transit')} className="text-xs font-bold text-[#F4511E] hover:underline flex items-center gap-1">Full Operations View <ChevronRight size={14} /></button>
+              <button onClick={() => navigate('/transit')} className="text-xs font-bold text-[#F4511E] hover:underline flex items-center gap-1 self-start sm:self-auto">Full Operations View <ChevronRight size={14} /></button>
             </div>
-            <div className="p-5">
+            <div className="p-3 sm:p-5">
               <TransitControlBoard trips={state.trips} onTripClick={id => setSelectedTripId(id)} />
             </div>
           </Card>
@@ -411,15 +410,15 @@ function PlantOperatorDashboard() {
       </div>
 
       {/* MY WORK TODAY */}
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center"><Clock size={16} /></div>
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 sm:p-5">
+        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+          <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0"><Clock size={16} /></div>
           <div>
             <h2 className="text-sm font-bold text-amber-900">MY WORK TODAY</h2>
             <p className="text-xs text-amber-700">{myPlantName}</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
           {[
             { label: 'Expected', value: expected, color: 'text-sky-700', bg: 'bg-sky-50 border-sky-200', action: () => navigate('/vehicles/at-plant') },
             { label: 'At Plant', value: atPlant, color: 'text-blue-700', bg: 'bg-blue-50 border-blue-200', action: () => navigate('/vehicles/at-plant') },
@@ -427,9 +426,9 @@ function PlantOperatorDashboard() {
             { label: 'Loaded / Ready', value: loaded, color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200', action: null },
           ].map(stat => (
             <button key={stat.label} onClick={stat.action || undefined}
-              className={`border rounded-xl p-3 text-center transition-all ${stat.bg} ${stat.action ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}>
-              <div className={`text-3xl font-bold ${stat.color}`}>{stat.value}</div>
-              <div className="text-xs font-semibold text-[#555E68] mt-1">{stat.label}</div>
+              className={`border rounded-xl p-2.5 sm:p-3 text-center transition-all ${stat.bg} ${stat.action ? 'cursor-pointer hover:shadow-sm' : 'cursor-default'}`}>
+              <div className={`text-2xl sm:text-3xl font-bold ${stat.color}`}>{stat.value}</div>
+              <div className="text-[11px] sm:text-xs font-semibold text-[#555E68] mt-0.5 sm:mt-1 truncate">{stat.label}</div>
             </button>
           ))}
         </div>
@@ -437,11 +436,11 @@ function PlantOperatorDashboard() {
 
       {/* Today's Vehicles */}
       <Card padding={false}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#F0EDE8]">
-          <h2 className="text-sm font-bold text-[#101820] flex items-center gap-2"><Truck size={15} />Today's Vehicles at {myPlantName}</h2>
-          <button onClick={() => navigate('/vehicles/at-plant')} className="text-xs text-[#F4511E] hover:underline font-bold flex items-center gap-1">View All <ChevronRight size={14} /></button>
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3.5 sm:py-4 border-b border-[#F0EDE8]">
+          <h2 className="text-xs sm:text-sm font-bold text-[#101820] flex items-center gap-2 truncate"><Truck size={15} />Today's Vehicles at {myPlantName}</h2>
+          <button onClick={() => navigate('/vehicles/at-plant')} className="text-xs text-[#F4511E] hover:underline font-bold flex items-center gap-1 flex-shrink-0">View All <ChevronRight size={14} /></button>
         </div>
-        <div className="p-4 space-y-2">
+        <div className="p-3 sm:p-4 space-y-2">
           {plantTrips.length === 0 ? (
             <EmptyState icon={<Truck size={28} />} title="No vehicles today" description="No vehicles assigned to your plant yet" />
           ) : (
@@ -449,18 +448,18 @@ function PlantOperatorDashboard() {
               const vehicle = state.vehicles.find(v => v.id === trip.vehicleId);
               return (
                 <button key={trip.id} onClick={() => setSelectedTripId(trip.id)}
-                  className="w-full text-left p-4 rounded-xl border border-[#E8E5E0] hover:border-[#F4511E]/40 bg-white hover:bg-[#FFF0E9]/30 transition-all">
-                  <div className="flex items-center justify-between">
+                  className="w-full text-left p-3 sm:p-4 rounded-xl border border-[#E8E5E0] hover:border-[#F4511E]/40 bg-white hover:bg-[#FFF0E9]/30 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#F6F5F2] flex items-center justify-center"><Truck size={18} className="text-[#F4511E]" /></div>
-                      <div>
-                        <div className="font-bold text-[#101820] font-mono text-sm">{trip.vehicleNumber}</div>
-                        <div className="text-xs text-[#555E68]">{vehicle?.driverName} · {vehicle?.capacityMT}MT</div>
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#F6F5F2] flex items-center justify-center flex-shrink-0"><Truck size={18} className="text-[#F4511E]" /></div>
+                      <div className="min-w-0">
+                        <div className="font-bold text-[#101820] font-mono text-xs sm:text-sm">{trip.vehicleNumber}</div>
+                        <div className="text-xs text-[#555E68] truncate">{vehicle?.driverName} · {vehicle?.capacityMT}MT</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <StatusBadge type="trip" value={trip.status} />
-                      <div className="text-[10px] text-[#8E9CA8] mt-1">{trip.quantityMT} MT {trip.material}</div>
+                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1">
+                      <StatusBadge type="trip" value={trip.status} size="sm" />
+                      <div className="text-[10px] text-[#8E9CA8]">{trip.quantityMT} MT {trip.material}</div>
                     </div>
                   </div>
                 </button>
@@ -526,24 +525,24 @@ function WarehouseOperatorDashboard() {
       </div>
 
       {/* MY WORK TODAY */}
-      <div className="bg-purple-50 border border-purple-200 rounded-2xl p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center"><Warehouse size={16} /></div>
+      <div className="bg-purple-50 border border-purple-200 rounded-2xl p-3.5 sm:p-5">
+        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+          <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center flex-shrink-0"><Warehouse size={16} /></div>
           <div>
             <h2 className="text-sm font-bold text-purple-900">MY WORK TODAY</h2>
             <p className="text-xs text-purple-700">{myWarehouseName}</p>
           </div>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
           {[
             { label: 'Incoming', value: incoming, color: 'text-sky-700', bg: 'bg-sky-50 border-sky-200' },
             { label: 'Arrived', value: arrived, color: 'text-purple-700', bg: 'bg-purple-100 border-purple-300' },
             { label: 'Unloading', value: unloading, color: 'text-amber-700', bg: 'bg-amber-50 border-amber-200' },
             { label: 'Completed', value: completed, color: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
           ].map(stat => (
-            <div key={stat.label} className={`border rounded-xl p-3 text-center ${stat.bg}`}>
-              <div className={`text-3xl font-bold ${stat.color}`}>{stat.value}</div>
-              <div className="text-xs font-semibold text-[#555E68] mt-1">{stat.label}</div>
+            <div key={stat.label} className={`border rounded-xl p-2.5 sm:p-3 text-center ${stat.bg}`}>
+              <div className={`text-2xl sm:text-3xl font-bold ${stat.color}`}>{stat.value}</div>
+              <div className="text-[11px] sm:text-xs font-semibold text-[#555E68] mt-0.5 sm:mt-1 truncate">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -551,11 +550,11 @@ function WarehouseOperatorDashboard() {
 
       {/* Incoming Vehicles */}
       <Card padding={false}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#F0EDE8]">
-          <h2 className="text-sm font-bold text-[#101820] flex items-center gap-2"><Truck size={15} />Incoming Vehicles — {myWarehouseName}</h2>
-          <button onClick={() => navigate('/vehicles/at-warehouse')} className="text-xs text-[#F4511E] hover:underline font-bold flex items-center gap-1">View All <ChevronRight size={14} /></button>
+        <div className="flex items-center justify-between px-4 sm:px-5 py-3.5 sm:py-4 border-b border-[#F0EDE8]">
+          <h2 className="text-xs sm:text-sm font-bold text-[#101820] flex items-center gap-2 truncate"><Truck size={15} />Incoming Vehicles — {myWarehouseName}</h2>
+          <button onClick={() => navigate('/vehicles/at-warehouse')} className="text-xs text-[#F4511E] hover:underline font-bold flex items-center gap-1 flex-shrink-0">View All <ChevronRight size={14} /></button>
         </div>
-        <div className="p-4 space-y-2">
+        <div className="p-3 sm:p-4 space-y-2">
           {activeWhTrips.length === 0 ? (
             <EmptyState icon={<Warehouse size={28} />} title="No incoming vehicles" description="No vehicles assigned to your warehouse" />
           ) : (
@@ -563,18 +562,18 @@ function WarehouseOperatorDashboard() {
               const vehicle = state.vehicles.find(v => v.id === trip.vehicleId);
               return (
                 <button key={trip.id} onClick={() => setSelectedTripId(trip.id)}
-                  className="w-full text-left p-4 rounded-xl border border-[#E8E5E0] hover:border-purple-300 bg-white hover:bg-purple-50/30 transition-all">
-                  <div className="flex items-center justify-between">
+                  className="w-full text-left p-3 sm:p-4 rounded-xl border border-[#E8E5E0] hover:border-purple-300 bg-white hover:bg-purple-50/30 transition-all">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center"><Truck size={18} className="text-purple-600" /></div>
-                      <div>
-                        <div className="font-bold text-[#101820] font-mono text-sm">{trip.vehicleNumber}</div>
-                        <div className="text-xs text-[#555E68]">{vehicle?.driverName} · {vehicle?.capacityMT}MT</div>
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0"><Truck size={18} className="text-purple-600" /></div>
+                      <div className="min-w-0">
+                        <div className="font-bold text-[#101820] font-mono text-xs sm:text-sm">{trip.vehicleNumber}</div>
+                        <div className="text-xs text-[#555E68] truncate">{vehicle?.driverName} · {vehicle?.capacityMT}MT</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <StatusBadge type="trip" value={trip.status} />
-                      <div className="text-[10px] text-[#8E9CA8] mt-1">{trip.quantityMT} MT {trip.material}</div>
+                    <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1">
+                      <StatusBadge type="trip" value={trip.status} size="sm" />
+                      <div className="text-[10px] text-[#8E9CA8]">{trip.quantityMT} MT {trip.material}</div>
                     </div>
                   </div>
                 </button>
@@ -615,22 +614,22 @@ function ManagementDashboard() {
       </div>
 
       {/* Top KPIs */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border border-[#E8E5E0] p-5 shadow-sm text-center">
-          <div className="text-4xl font-bold text-[#F4511E]">{totalTrips}</div>
-          <div className="text-xs text-[#555E68] font-semibold mt-1 uppercase tracking-wider">Total Trips</div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white rounded-2xl border border-[#E8E5E0] p-3.5 sm:p-5 shadow-sm text-center">
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#F4511E]">{totalTrips}</div>
+          <div className="text-[10px] sm:text-xs text-[#555E68] font-semibold mt-1 uppercase tracking-wider">Total Trips</div>
         </div>
-        <div className="bg-white rounded-2xl border border-[#E8E5E0] p-5 shadow-sm text-center" onClick={() => navigate('/transit')} style={{cursor:'pointer'}}>
-          <div className="text-4xl font-bold text-blue-600">{stats.inTransit}</div>
-          <div className="text-xs text-[#555E68] font-semibold mt-1 uppercase tracking-wider">In Transit</div>
+        <div className="bg-white rounded-2xl border border-[#E8E5E0] p-3.5 sm:p-5 shadow-sm text-center" onClick={() => navigate('/transit')} style={{cursor:'pointer'}}>
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-600">{stats.inTransit}</div>
+          <div className="text-[10px] sm:text-xs text-[#555E68] font-semibold mt-1 uppercase tracking-wider">In Transit</div>
         </div>
-        <div className="bg-white rounded-2xl border border-rose-200 p-5 shadow-sm text-center" onClick={() => navigate('/exceptions')} style={{cursor:'pointer'}}>
-          <div className="text-4xl font-bold text-rose-600">{delayedTrips}</div>
-          <div className="text-xs text-[#555E68] font-semibold mt-1 uppercase tracking-wider">Delayed</div>
+        <div className="bg-white rounded-2xl border border-rose-200 p-3.5 sm:p-5 shadow-sm text-center" onClick={() => navigate('/exceptions')} style={{cursor:'pointer'}}>
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-rose-600">{delayedTrips}</div>
+          <div className="text-[10px] sm:text-xs text-[#555E68] font-semibold mt-1 uppercase tracking-wider">Delayed</div>
         </div>
-        <div className="bg-white rounded-2xl border border-emerald-200 p-5 shadow-sm text-center">
-          <div className="text-4xl font-bold text-emerald-600">{onTimePct}%</div>
-          <div className="text-xs text-[#555E68] font-semibold mt-1 uppercase tracking-wider">On-Time</div>
+        <div className="bg-white rounded-2xl border border-emerald-200 p-3.5 sm:p-5 shadow-sm text-center">
+          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-emerald-600">{onTimePct}%</div>
+          <div className="text-[10px] sm:text-xs text-[#555E68] font-semibold mt-1 uppercase tracking-wider">On-Time</div>
         </div>
       </div>
 

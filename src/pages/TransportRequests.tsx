@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Plus, ClipboardList, X } from 'lucide-react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Plus, ClipboardList } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import {
-  PageHeader, StatusBadge, SearchBar, SelectFilter, Table, Th, Td,
+  PageHeader, StatusBadge, SearchBar, Table, Th, Td,
   EmptyState, Card, Button, Modal
 } from '../components/ui';
 import { useToast } from '../hooks/useToast';
@@ -324,12 +324,12 @@ export function TransportRequests() {
       />
 
       {/* Tabs styled with design system */}
-      <div className="flex gap-1.5 p-1.5 bg-[#F6F5F2] border border-[#E8E5E0] rounded-2xl overflow-x-auto">
+      <div className="flex gap-1.5 p-1.5 bg-[#F6F5F2] border border-[#E8E5E0] rounded-2xl overflow-x-auto max-w-full touch-pan-x">
         {STATUS_TABS.map(t => (
           <button
             key={t.value}
             onClick={() => setTab(t.value)}
-            className={`px-3.5 py-2 text-xs font-bold rounded-xl whitespace-nowrap transition-all duration-150
+            className={`px-3.5 py-2 text-xs font-bold rounded-xl whitespace-nowrap transition-all duration-150 flex-shrink-0
               ${tab === t.value
                 ? 'bg-[#F4511E] text-white shadow-sm'
                 : 'text-[#555E68] hover:text-[#101820] hover:bg-white/60'}`}
@@ -386,12 +386,12 @@ export function TransportRequests() {
                   <div className="flex items-center gap-2">
                     {req.status === 'PENDING' && (
                       <>
-                        <a
-                          href={`/assignment`}
+                        <Link
+                          to="/assignment"
                           className="text-xs text-[#F4511E] hover:underline font-bold px-2 py-1 rounded hover:bg-[#FFF0E9] transition-colors"
                         >
                           Assign Truck
-                        </a>
+                        </Link>
                         <button
                           className="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2 py-1"
                           onClick={() => setCancelId(req.id)}
@@ -432,14 +432,14 @@ export function TransportRequests() {
 
       {/* Cancel Confirm */}
       {cancelId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="absolute inset-0 bg-[#101820]/60 backdrop-blur-sm" onClick={() => setCancelId(null)} />
-          <div className="relative w-full max-w-sm bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl p-6">
+          <div className="relative w-full max-w-sm bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl p-4 sm:p-6">
             <h3 className="font-bold text-[#101820] text-base mb-2">Cancel Transport Request?</h3>
             <p className="text-sm text-[#555E68] mb-5">Are you sure you want to cancel request <strong className="text-[#101820]">{cancelId}</strong>? This action cannot be undone.</p>
-            <div className="flex gap-3 justify-end">
-              <Button variant="secondary" onClick={() => setCancelId(null)}>Keep</Button>
-              <Button variant="danger" onClick={handleCancel}>Cancel Request</Button>
+            <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 sm:justify-end">
+              <Button variant="secondary" onClick={() => setCancelId(null)} className="w-full sm:w-auto justify-center">Keep</Button>
+              <Button variant="danger" onClick={handleCancel} className="w-full sm:w-auto justify-center">Cancel Request</Button>
             </div>
           </div>
         </div>

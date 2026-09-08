@@ -63,12 +63,6 @@ export function VehicleAssignment() {
     setSelectedRequestId(pendingRequests.find(r => r.id !== selectedRequest.id)?.id || '');
   };
 
-  const locationOptions = [
-    { label: 'All Locations', value: '' },
-    ...state.plants.map(p => ({ label: p.name, value: p.id })),
-    ...state.warehouses.map(w => ({ label: w.name, value: w.id })),
-  ];
-
   const confirmVehicle = confirmVehicleId ? state.vehicles.find(v => v.id === confirmVehicleId) : null;
 
   const timeFmt = (iso: string) => {
@@ -159,7 +153,7 @@ export function VehicleAssignment() {
               label="Capacity filter"
             />
           </div>
-          <div className="overflow-x-auto max-h-[520px] overflow-y-auto">
+          <div className="overflow-x-auto max-h-[520px] overflow-y-auto max-w-full touch-pan-x">
             <table className="w-full text-xs">
               <thead>
                 <tr className="bg-[#F6F5F2] border-b border-[#E8E5E0]">
@@ -177,7 +171,10 @@ export function VehicleAssignment() {
                   return (
                     <tr key={vehicle.id} className={`border-b border-[#F0EDE8] hover:bg-[#FFF0E9]/30 transition-colors ${!capacityOk ? 'opacity-50' : ''}`}>
                       <td className="px-4 py-3.5">
-                        <div className="font-bold text-[#101820] font-mono text-xs">{vehicle.vehicleNumber}</div>
+                        <div className="font-bold text-[#101820] font-mono text-xs flex items-center flex-wrap">
+                          {vehicle.vehicleNumber}
+                          <span className="sm:hidden text-[10px] font-bold text-emerald-700 ml-1.5">({vehicle.capacityMT} MT)</span>
+                        </div>
                         <div className="text-[#8E9CA8] text-[11px]">{vehicle.transporterName.split(' ').slice(0,2).join(' ')}</div>
                         <StatusBadge type="vehicle" value={vehicle.status} size="sm" />
                       </td>
@@ -232,14 +229,14 @@ export function VehicleAssignment() {
 
       {/* Confirm assign dialog */}
       {confirmVehicle && selectedRequest && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
           <div className="absolute inset-0 bg-[#101820]/60 backdrop-blur-sm" onClick={() => setConfirmVehicleId(null)} />
-          <div className="relative w-full max-w-md bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl overflow-hidden">
-            <div className="px-6 py-4 border-b border-[#F0EDE8] bg-[#F6F5F2]">
+          <div className="relative w-full max-w-md bg-white rounded-2xl border border-[#E8E5E0] shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
+            <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-[#F0EDE8] bg-[#F6F5F2] flex-shrink-0">
               <h2 className="text-base font-bold text-[#101820]">Confirm Vehicle Assignment</h2>
             </div>
-            <div className="px-6 py-5 space-y-3.5">
-              <div className="p-4 bg-[#FFF0E9]/50 rounded-xl border border-[#FFE1D4] space-y-2.5 text-sm">
+            <div className="px-4 sm:px-6 py-4 sm:py-5 space-y-3.5 overflow-y-auto flex-1">
+              <div className="p-3.5 sm:p-4 bg-[#FFF0E9]/50 rounded-xl border border-[#FFE1D4] space-y-2.5 text-sm">
                 <div className="flex justify-between"><span className="text-[#8E9CA8] font-medium">Request:</span><span className="font-mono font-bold text-[#101820]">{selectedRequest.id}</span></div>
                 <div className="flex justify-between"><span className="text-[#8E9CA8] font-medium">Route:</span><span className="font-semibold text-[#101820] text-xs">{selectedRequest.sourcePlantName.replace('Plant','')} → {selectedRequest.destinationWarehouseName.replace('Warehouse','')}</span></div>
                 <div className="flex justify-between"><span className="text-[#8E9CA8] font-medium">Material:</span><span className="font-bold text-[#101820]">{selectedRequest.material} — {selectedRequest.quantityMT} MT</span></div>
@@ -256,9 +253,9 @@ export function VehicleAssignment() {
                 </div>
               )}
             </div>
-            <div className="px-6 py-4 border-t border-[#F0EDE8] bg-[#F6F5F2] flex gap-3 justify-end">
-              <Button variant="secondary" onClick={() => setConfirmVehicleId(null)}>Cancel</Button>
-              <Button variant="primary" onClick={handleAssign} icon={<Check size={16} />}>Confirm Assignment</Button>
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-[#F0EDE8] bg-[#F6F5F2] flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 sm:justify-end flex-shrink-0">
+              <Button variant="secondary" onClick={() => setConfirmVehicleId(null)} className="w-full sm:w-auto justify-center">Cancel</Button>
+              <Button variant="primary" onClick={handleAssign} icon={<Check size={16} />} className="w-full sm:w-auto justify-center">Confirm Assignment</Button>
             </div>
           </div>
         </div>

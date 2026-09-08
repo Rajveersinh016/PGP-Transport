@@ -23,7 +23,7 @@ export function DriversPage() {
         <select
           value={transporterFilter}
           onChange={e => setTransporterFilter(e.target.value)}
-          className="text-sm border border-[#E8E5E0] rounded-[10px] px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#F4511E]"
+          className="w-full sm:w-auto text-sm border border-[#E8E5E0] rounded-[10px] px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#F4511E]"
         >
           <option value="">All Transporters</option>
           {state.transporters.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}

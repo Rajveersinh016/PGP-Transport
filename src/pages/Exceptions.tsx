@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertTriangle, Eye, MessageSquare, CheckCircle, Filter } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { PageHeader, StatusBadge, SearchBar, SelectFilter, Card, Button, EmptyState, Modal } from '../components/ui';
+import { PageHeader, SearchBar, SelectFilter, Card, Button, EmptyState, Modal } from '../components/ui';
 import { useToast } from '../hooks/useToast';
 import { ToastContainer } from '../components/ui';
 import type { ExceptionType, ExceptionSeverity } from '../types';
@@ -68,7 +68,7 @@ export function Exceptions() {
       />
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
         <div className="p-4 bg-white border border-rose-200/80 rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.03)] text-center">
           <div className="text-2xl lg:text-3xl font-bold text-rose-700">{criticalCount}</div>
           <div className="text-xs text-[#555E68] font-bold uppercase tracking-wider mt-1">Critical Exceptions</div>
@@ -147,7 +147,7 @@ export function Exceptions() {
               </div>
             </div>
 
-            <div className="p-5">
+            <div className="p-4 sm:p-5">
               <h3 className="text-base font-bold text-[#101820] mb-1">{exc.title}</h3>
               <p className="text-sm text-[#555E68] leading-relaxed">{exc.description}</p>
 
@@ -232,9 +232,9 @@ export function Exceptions() {
       {/* Add Remark Modal */}
       <Modal open={!!remarkModal} onClose={() => setRemarkModal(null)} title="Add Operational Remark" size="sm"
         footer={
-          <div className="flex gap-3 justify-end">
-            <Button variant="secondary" onClick={() => setRemarkModal(null)}>Cancel</Button>
-            <Button variant="primary" onClick={handleAddRemark} disabled={!remarkText.trim()}>Submit Remark</Button>
+          <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 sm:justify-end">
+            <Button variant="secondary" onClick={() => setRemarkModal(null)} className="w-full sm:w-auto justify-center">Cancel</Button>
+            <Button variant="primary" onClick={handleAddRemark} disabled={!remarkText.trim()} className="w-full sm:w-auto justify-center">Submit Remark</Button>
           </div>
         }
       >

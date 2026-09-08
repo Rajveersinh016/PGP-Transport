@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  Cell, PieChart, Pie, Legend
+  Cell
 } from 'recharts';
 import { useApp } from '../../context/AppContext';
 import { BarChart2 } from 'lucide-react';
@@ -83,7 +83,7 @@ export function TransportStatusChart() {
 
   if (totalTrips === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-[#E8E5E0] p-6 shadow-sm">
+      <div className="bg-white rounded-2xl border border-[#E8E5E0] p-4 sm:p-6 shadow-sm">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-9 h-9 rounded-xl bg-[#FFF0E9] flex items-center justify-center">
             <BarChart2 size={18} className="text-[#F4511E]" />
@@ -105,7 +105,7 @@ export function TransportStatusChart() {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-[#E8E5E0] p-6 shadow-sm">
+    <div className="bg-white rounded-2xl border border-[#E8E5E0] p-4 sm:p-6 shadow-sm">
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div className="flex items-center gap-3">
@@ -124,34 +124,37 @@ export function TransportStatusChart() {
       </div>
 
       {/* Bar Chart */}
-      <ResponsiveContainer width="100%" height={200}>
-        <BarChart data={data} barSize={36} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#F0EDE8" vertical={false} />
-          <XAxis
-            dataKey="name"
-            tick={{ fontSize: 11, fill: '#8E9CA8', fontWeight: 600 }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            allowDecimals={false}
-            tick={{ fontSize: 11, fill: '#8E9CA8' }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F6F5F2' }} />
-          <Bar
-            dataKey="value"
-            radius={[6, 6, 0, 0]}
-            cursor="pointer"
-            onClick={(data) => handleBarClick(data as unknown as ChartDatum)}
-          >
-            {data.map((entry, index) => (
-              <Cell key={index} fill={entry.color} fillOpacity={entry.value === 0 ? 0.3 : 1} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="w-full h-[200px] min-w-0">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} maxBarSize={36} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#F0EDE8" vertical={false} />
+            <XAxis
+              dataKey="name"
+              tick={{ fontSize: 10, fill: '#8E9CA8', fontWeight: 600 }}
+              axisLine={false}
+              tickLine={false}
+              interval={0}
+            />
+            <YAxis
+              allowDecimals={false}
+              tick={{ fontSize: 10, fill: '#8E9CA8' }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: '#F6F5F2' }} />
+            <Bar
+              dataKey="value"
+              radius={[6, 6, 0, 0]}
+              cursor="pointer"
+              onClick={(data) => handleBarClick(data as unknown as ChartDatum)}
+            >
+              {data.map((entry, index) => (
+                <Cell key={index} fill={entry.color} fillOpacity={entry.value === 0 ? 0.3 : 1} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       {/* Legend + key stats */}
       <div className="mt-4 pt-4 border-t border-[#F0EDE8] flex flex-wrap gap-3">
