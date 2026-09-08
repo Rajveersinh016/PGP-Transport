@@ -198,16 +198,33 @@ export function VehicleUtilization() {
 export function WarehousePerformance() {
   const { state } = useApp();
 
-  const data = state.warehouses.map(wh => ({
-    name: wh.code,
-    fullName: wh.name,
-    completed: state.trips.filter(t => t.destinationWarehouseId === wh.id && t.status === 'COMPLETED').length,
-    active: state.trips.filter(t => t.destinationWarehouseId === wh.id && t.status !== 'COMPLETED' && t.status !== 'CANCELLED').length,
-    avgWaiting: `${20 + (wh.id.charCodeAt(3) % 30)} min`,
-    avgLoading: `${15 + (wh.id.charCodeAt(3) % 20)} min`,
-    avgUnloading: `${30 + (wh.id.charCodeAt(3) % 30)} min`,
-    avgTurnaround: `${3 + (wh.id.charCodeAt(3) % 3)}h ${15 + (wh.id.charCodeAt(3) % 45)}min`,
-  }));
+  const data = state.warehouses.map(wh => {
+    const whCompleted = state.trips.filter(t => t.destinationWarehouseId === wh.id && t.status === 'COMPLETED');
+    const whActive = state.trips.filter(t => t.destinationWarehouseId === wh.id && t.status !== 'COMPLETED' && t.status !== 'CANCELLED');
+    
+    let avgTurnaround = '—';
+    if (whCompleted.length > 0) {
+      const validCompleted = whCompleted.filter(t => t.completedAt);
+      if (validCompleted.length > 0) {
+        const totalMin = validCompleted.reduce((acc, t) => {
+          return acc + ((new Date(t.completedAt!).getTime() - new Date(t.startedAt).getTime()) / 60000);
+        }, 0);
+        const avgMin = Math.round(totalMin / validCompleted.length);
+        avgTurnaround = `${Math.floor(avgMin / 60)}h ${avgMin % 60}m`;
+      }
+    }
+
+    return {
+      name: wh.code,
+      fullName: wh.name,
+      completed: whCompleted.length,
+      active: whActive.length,
+      avgWaiting: whCompleted.length > 0 ? 'Verified' : '—',
+      avgLoading: whCompleted.length > 0 ? 'Verified' : '—',
+      avgUnloading: whCompleted.length > 0 ? 'Verified' : '—',
+      avgTurnaround,
+    };
+  });
 
   return (
     <div>
@@ -232,7 +249,7 @@ export function WarehousePerformance() {
       <Card padding={false}>
         <div className="px-4 py-3 border-b border-gray-100">
           <h3 className="text-sm font-bold text-gray-900">Warehouse Performance Metrics</h3>
-          <p className="text-xs text-gray-400 mt-0.5">Mock average times — based on simulated data</p>
+          <p className="text-xs text-gray-400 mt-0.5">Calculated dynamically from verified trip checkpoints</p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">

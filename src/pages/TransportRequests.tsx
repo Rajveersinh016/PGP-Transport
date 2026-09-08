@@ -32,19 +32,19 @@ function NewRequestForm({ onClose, onSubmit }: NewRequestFormProps) {
   const defaultWh = state.warehouses.find(w => w.id === 'WH-02')?.id || state.warehouses[0]?.id;
   const defaultPlt = state.plants.find(p => p.id === 'PLT-01')?.id || state.plants[0]?.id;
 
-  const [form, setForm] = useState({
-    requestId: 'TR-2026-00421',
+  const [form, setForm] = useState(() => ({
+    requestId: `TR-2026-${String(Date.now()).slice(-5)}`,
     sourcePlantId: defaultPlt,
     destinationWarehouseId: defaultWh,
     material: 'FG' as MaterialType,
-    quantityMT: '38',
-    requiredVehicleType: 'TRUCK_40T' as VehicleType,
-    requiredCapacityMT: '40',
-    priority: 'HIGH' as Priority,
+    quantityMT: '20',
+    requiredVehicleType: 'TRUCK_20T' as VehicleType,
+    requiredCapacityMT: '20',
+    priority: 'MEDIUM' as Priority,
     requiredDate: new Date().toISOString().split('T')[0],
     requiredTime: '14:00',
-    remarks: 'Master demo transport scenario',
-  });
+    remarks: '',
+  }));
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
@@ -296,7 +296,7 @@ export function TransportRequests() {
   const handleNewRequest = (req: TransportRequest) => {
     addRequest(req);
     setShowNewForm(false);
-    addToast('success', `Transport request ${req.id} created successfully`);
+    addToast('success', `Transport request ${req.id} created successfully. Next step: Assign an available vehicle.`);
   };
 
   const handleCancel = () => {
@@ -387,10 +387,10 @@ export function TransportRequests() {
                     {req.status === 'PENDING' && (
                       <>
                         <Link
-                          to="/assignment"
-                          className="text-xs text-[#F4511E] hover:underline font-bold px-2 py-1 rounded hover:bg-[#FFF0E9] transition-colors"
+                          to={`/assignment?requestId=${req.id}`}
+                          className="text-xs bg-[#F4511E] text-white hover:bg-[#D43D10] font-bold px-2.5 py-1.5 rounded-[8px] transition-colors shadow-xs"
                         >
-                          Assign Truck
+                          Assign Vehicle
                         </Link>
                         <button
                           className="text-xs text-rose-600 hover:text-rose-800 font-semibold px-2 py-1"

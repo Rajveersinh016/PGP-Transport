@@ -108,8 +108,17 @@ export function WarehousesPage() {
           const pending = activeTrips.filter(t => t.status === 'IN_TRANSIT').length;
           const completedToday = state.trips.filter(t => t.destinationWarehouseId === wh.id && t.status === 'COMPLETED').length;
 
-          // Average turnaround from completed trips (mock)
-          const avgTurnaround = `${3 + (wh.id.charCodeAt(3) % 3)} hrs ${15 + (wh.id.charCodeAt(3) % 30)} min`;
+          // Turnaround from completed trips
+          const completedWhTrips = state.trips.filter(t => t.destinationWarehouseId === wh.id && t.status === 'COMPLETED' && t.completedAt);
+          let avgTurnaround = '—';
+          if (completedWhTrips.length > 0) {
+            const totalMin = completedWhTrips.reduce((acc, t) => {
+              const diff = (new Date(t.completedAt!).getTime() - new Date(t.startedAt).getTime()) / 60000;
+              return acc + diff;
+            }, 0);
+            const avgMin = Math.round(totalMin / completedWhTrips.length);
+            avgTurnaround = `${Math.floor(avgMin / 60)}h ${avgMin % 60}m`;
+          }
 
           return (
             <button

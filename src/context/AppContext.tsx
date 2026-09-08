@@ -82,16 +82,23 @@ const vehicleStatusForTripStatus = (tripStatus: TripStatus): VehicleStatus => {
   return map[tripStatus] || 'AVAILABLE';
 };
 
-const STORAGE_KEY = 'TRANSITFLOW_STATE_V2';
+const STORAGE_KEY = 'TRANSITFLOW_STATE_V3';
 
 const getInitialState = (): AppState => {
   try {
+    // Purge legacy demo-laden states if present
+    localStorage.removeItem('TRANSITFLOW_STATE_V1');
+    localStorage.removeItem('TRANSITFLOW_STATE_V2');
+
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
       if (parsed && Array.isArray(parsed.vehicles) && Array.isArray(parsed.trips)) {
-        // Ensure operatorNotes exists in persisted state (migration)
         if (!Array.isArray(parsed.operatorNotes)) parsed.operatorNotes = [];
+        if (!Array.isArray(parsed.exceptions)) parsed.exceptions = [];
+        if (!Array.isArray(parsed.auditLog)) parsed.auditLog = [];
+        if (!Array.isArray(parsed.notifications)) parsed.notifications = [];
+        if (!Array.isArray(parsed.requests)) parsed.requests = [];
         return parsed;
       }
     }
@@ -465,6 +472,8 @@ function reducer(state: AppState, action: Action): AppState {
     case 'RESET_DEMO': {
       try {
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem('TRANSITFLOW_STATE_V1');
+        localStorage.removeItem('TRANSITFLOW_STATE_V2');
       } catch {}
       return INITIAL_STATE;
     }
